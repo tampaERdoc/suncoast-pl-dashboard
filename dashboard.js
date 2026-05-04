@@ -320,12 +320,14 @@ function renderKPIsAndMetrics() {
   document.getElementById("kpiPerChild").textContent = fmtUSD(perChild) + " / child / mo";
 
   // Cash on hand
-  const cashHorizon = state.projectionMonths;
-  const cashKpi = state.startingCash + t.monthlyNOI * cashHorizon;
-  document.getElementById("kpiCash").textContent = fmtUSD(cashKpi);
-  document.getElementById("kpiCashHorizon").textContent = `(${cashHorizon} mo)`;
-  document.getElementById("kpiCashStart").textContent = `from ${fmtUSD(state.startingCash)} starting`;
-  document.querySelector(".kpi-cash").classList.toggle("negative", cashKpi < 0);
+  const cashNow = state.startingCash;
+  const cash1Yr = state.startingCash + t.annualNOI;
+  document.getElementById("kpiCashNow").textContent = fmtUSD(cashNow);
+  document.getElementById("kpiCash1Yr").textContent = fmtUSD(cash1Yr);
+  const noiSign = t.annualNOI >= 0 ? "+" : "−";
+  document.getElementById("kpiCash1YrDelta").textContent = `${noiSign}${fmtUSD(Math.abs(t.annualNOI))} from NOI`;
+  document.querySelector(".kpi-cash-now").classList.toggle("negative", cashNow < 0);
+  document.querySelector(".kpi-cash-future").classList.toggle("negative", cash1Yr < 0);
   document.getElementById("cashNOI").textContent = fmtUSD(t.monthlyNOI);
   document.getElementById("cashProjected").textContent = fmtUSD(cashKpi);
   document.getElementById("cash3").textContent = fmtUSD(state.startingCash + t.monthlyNOI * 3);
