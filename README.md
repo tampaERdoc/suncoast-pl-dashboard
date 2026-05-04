@@ -28,16 +28,20 @@ python3 -m http.server 8000
 | `styles.css` | Design system |
 | `dashboard.js` | P&L model, scenarios, render logic |
 
-## Source data
+## Source data & methodology note
 
-Calculations reconcile to the source spreadsheet (`Suncoast_Academy_PL_Statement.xlsx`) to the cent for both scenarios:
+Underlying enrollment, tuition rates, and expense lines come from the source spreadsheet (`Suncoast_Academy_PL_Statement.xlsx`). The dashboard uses the more accurate **4.33 weeks/month** (52 ÷ 12) for the weekly→monthly conversion, vs. the spreadsheet's rounded 4. This produces revenue figures ~8% higher than the source xlsx but is the conversion factor most accountants use.
+
+Default scenario figures with 4.33 weeks/month:
 
 | | Baseline (66) | Expanded (81) |
 |---|---:|---:|
-| Monthly tuition revenue | $72,976 | $90,144 |
+| Monthly tuition revenue | ~$78,997 | ~$97,581 |
 | Monthly salaries | $40,423.07 | $46,260.94 |
 | Monthly G&A | $24,631 | $25,353 |
-| Net Operating Income | **$7,921.93 / mo** | **$18,530.06 / mo** |
+| Net Operating Income | **~$13,943 / mo** | **~$25,967 / mo** |
+
+You can change the multiplier back to 4.0 in the Revenue panel if you want to match the source spreadsheet exactly.
 
 ## Disclaimer
 

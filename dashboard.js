@@ -4,7 +4,7 @@
 const SCENARIOS = {
   baseline: {
     label: "July 2026 (66)",
-    weeksPerMonth: 4,
+    weeksPerMonth: 4.33,
     revenue: [
       { id: "infant",  label: "Infant",     enrollment: 12, weeklyRate: 360, room: "infant" },
       { id: "toddler", label: "Toddler",    enrollment: 13, weeklyRate: 302, room: "toddler" },
@@ -60,7 +60,7 @@ const SCENARIOS = {
   },
   expanded: {
     label: "Expanded (81)",
-    weeksPerMonth: 4,
+    weeksPerMonth: 4.33,
     revenue: [
       { id: "infant",  label: "Infant",     enrollment: 16, weeklyRate: 360, room: "infant" },
       { id: "toddler", label: "Toddler",    enrollment: 16, weeklyRate: 302, room: "toddler" },
@@ -155,6 +155,8 @@ function loadState() {
       state = parsed.state || clone(SCENARIOS[activeScenario]);
       if (state.startingCash === undefined) state.startingCash = CASH_DEFAULTS.startingCash;
       if (state.projectionMonths === undefined) state.projectionMonths = CASH_DEFAULTS.projectionMonths;
+      // Migration: bump old default 4 weeks → 4.33 (52 wk / 12 mo). Leaves intentional edits alone.
+      if (state.weeksPerMonth === 4) state.weeksPerMonth = 4.33;
       return;
     }
   } catch {}
