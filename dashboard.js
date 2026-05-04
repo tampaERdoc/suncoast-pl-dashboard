@@ -421,6 +421,32 @@ function attachEvents() {
     state.expenses.push({ name: "New Expense", monthly: 0 });
     render();
   });
+
+  document.querySelectorAll(".reset-btn[data-reset]").forEach((btn) => {
+    btn.addEventListener("click", () => resetSection(btn.dataset.reset));
+  });
+}
+
+function resetSection(section) {
+  const defaults = SCENARIOS[activeScenario];
+  const labels = {
+    revenue: "enrollment, weekly tuition rates, and weeks-per-month",
+    ratios: "Florida DCF staff ratios",
+    staff: "the salary list",
+    expenses: "the G&A expense list",
+  };
+  if (!confirm(`Restore ${labels[section]} to the "${defaults.label}" defaults?`)) return;
+  if (section === "revenue") {
+    state.revenue = clone(defaults.revenue);
+    state.weeksPerMonth = defaults.weeksPerMonth;
+  } else if (section === "ratios") {
+    state.rooms = clone(defaults.rooms);
+  } else if (section === "staff") {
+    state.staff = clone(defaults.staff);
+  } else if (section === "expenses") {
+    state.expenses = clone(defaults.expenses);
+  }
+  render();
 }
 
 // ---------- boot ----------

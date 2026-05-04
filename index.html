@@ -32,7 +32,10 @@
 
   <!-- REVENUE -->
   <section class="card panel">
-    <h2>Revenue — Tuition</h2>
+    <div class="panel-head">
+      <h2>Revenue — Tuition</h2>
+      <button class="reset-btn" data-reset="revenue" title="Restore enrollment, weekly rates, and weeks/month to scenario defaults">↺ Reset section</button>
+    </div>
     <div class="control-row weeks-row">
       <label>Weeks per month <small>(weekly→monthly multiplier)</small></label>
       <input type="number" id="weeksPerMonth" min="1" max="5" step="0.1" value="4" />
@@ -62,7 +65,10 @@
 
   <!-- STAFF RATIOS -->
   <section class="card panel">
-    <h2>Florida DCF Staff Ratios <small>(65C-22.001)</small></h2>
+    <div class="panel-head">
+      <h2>Florida DCF Staff Ratios <small>(65C-22.001)</small></h2>
+      <button class="reset-btn" data-reset="ratios" title="Restore ratios to Florida DCF defaults">↺ Reset section</button>
+    </div>
     <p class="hint">Edit each room's required ratio (children per teacher). The model computes <strong>required</strong> staff vs. <strong>assigned</strong> staff (count of payroll line-items tagged to that room). Out-of-ratio rooms turn red.</p>
     <table class="data-table" id="ratioTable">
       <thead>
@@ -84,7 +90,10 @@
   <section class="card panel">
     <div class="panel-head">
       <h2>Salaries &amp; Wages</h2>
-      <button id="addStaffBtn" class="add-btn">+ Add staff</button>
+      <div class="btn-group">
+        <button class="reset-btn" data-reset="staff" title="Restore staff list to scenario defaults">↺ Reset section</button>
+        <button id="addStaffBtn" class="add-btn">+ Add staff</button>
+      </div>
     </div>
     <table class="data-table editable" id="staffTable">
       <thead>
@@ -113,7 +122,10 @@
   <section class="card panel">
     <div class="panel-head">
       <h2>General &amp; Administrative</h2>
-      <button id="addExpenseBtn" class="add-btn">+ Add expense</button>
+      <div class="btn-group">
+        <button class="reset-btn" data-reset="expenses" title="Restore G&amp;A expense list to scenario defaults">↺ Reset section</button>
+        <button id="addExpenseBtn" class="add-btn">+ Add expense</button>
+      </div>
     </div>
     <table class="data-table editable" id="expenseTable">
       <thead>

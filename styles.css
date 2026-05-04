@@ -161,6 +161,29 @@ body {
 }
 .add-btn:hover { background: var(--accent); color: white; }
 
+.reset-btn {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.15s;
+}
+.reset-btn:hover {
+  background: var(--warn-soft);
+  color: #92400e;
+  border-color: var(--warn);
+}
+
+.btn-group {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
 .data-table, .metrics-table {
   width: 100%;
   border-collapse: collapse;
