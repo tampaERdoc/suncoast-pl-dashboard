@@ -118,6 +118,13 @@ const SCENARIOS = {
 };
 
 const STORAGE_KEY = "suncoast-pl-state-v1";
+const CASH_DEFAULTS = { startingCash: 20000, projectionMonths: 12 };
+// Apply cash defaults to both scenarios
+SCENARIOS.baseline.startingCash = CASH_DEFAULTS.startingCash;
+SCENARIOS.baseline.projectionMonths = CASH_DEFAULTS.projectionMonths;
+SCENARIOS.expanded.startingCash = CASH_DEFAULTS.startingCash;
+SCENARIOS.expanded.projectionMonths = CASH_DEFAULTS.projectionMonths;
+
 let state;
 let activeScenario = "baseline";
 let chart;
@@ -146,6 +153,8 @@ function loadState() {
       const parsed = JSON.parse(raw);
       activeScenario = parsed.activeScenario || "baseline";
       state = parsed.state || clone(SCENARIOS[activeScenario]);
+      if (state.startingCash === undefined) state.startingCash = CASH_DEFAULTS.startingCash;
+      if (state.projectionMonths === undefined) state.projectionMonths = CASH_DEFAULTS.projectionMonths;
       return;
     }
   } catch {}
@@ -169,9 +178,15 @@ function render() {
   renderStaff();
   renderExpenses();
   renderRatios();
+  renderCash();
   renderKPIsAndMetrics();
   renderChart();
   saveState();
+}
+
+function renderCash() {
+  document.getElementById("cashStart").value = state.startingCash;
+  document.getElementById("cashMonths").value = state.projectionMonths;
 }
 
 function renderScenarioButtons() {
@@ -304,6 +319,29 @@ function renderKPIsAndMetrics() {
   const perChild = t.totalChildren > 0 ? t.monthlyRev / t.totalChildren : 0;
   document.getElementById("kpiPerChild").textContent = fmtUSD(perChild) + " / child / mo";
 
+  // Cash on hand
+  const cashHorizon = state.projectionMonths;
+  const cashKpi = state.startingCash + t.monthlyNOI * cashHorizon;
+  document.getElementById("kpiCash").textContent = fmtUSD(cashKpi);
+  document.getElementById("kpiCashHorizon").textContent = `(${cashHorizon} mo)`;
+  document.getElementById("kpiCashStart").textContent = `from ${fmtUSD(state.startingCash)} starting`;
+  document.querySelector(".kpi-cash").classList.toggle("negative", cashKpi < 0);
+  document.getElementById("cashNOI").textContent = fmtUSD(t.monthlyNOI);
+  document.getElementById("cashProjected").textContent = fmtUSD(cashKpi);
+  document.getElementById("cash3").textContent = fmtUSD(state.startingCash + t.monthlyNOI * 3);
+  document.getElementById("cash6").textContent = fmtUSD(state.startingCash + t.monthlyNOI * 6);
+  document.getElementById("cash12").textContent = fmtUSD(state.startingCash + t.monthlyNOI * 12);
+  document.getElementById("cash24").textContent = fmtUSD(state.startingCash + t.monthlyNOI * 24);
+  // Runway: only meaningful when burning cash (NOI < 0)
+  const runwayRow = document.getElementById("cashRunwayRow");
+  if (t.monthlyNOI < 0 && state.startingCash > 0) {
+    const months = state.startingCash / Math.abs(t.monthlyNOI);
+    document.getElementById("cashRunway").textContent = months.toFixed(1) + " months";
+    runwayRow.style.display = "";
+  } else {
+    runwayRow.style.display = "none";
+  }
+
   document.getElementById("m_revenue").textContent = fmtUSD(t.annualRev);
   document.getElementById("m_expense").textContent = fmtUSD(t.annualExp);
   document.getElementById("m_salPct").textContent = t.monthlyRev > 0 ? fmtPct(t.monthlySal / t.monthlyRev) : "—";
@@ -361,6 +399,16 @@ function attachEvents() {
   document.getElementById("weeksPerMonth").addEventListener("input", (e) => {
     state.weeksPerMonth = +e.target.value || 0;
     render();
+  });
+  document.getElementById("cashStart").addEventListener("input", (e) => {
+    state.startingCash = parseFloat(e.target.value) || 0;
+    renderKPIsAndMetrics();
+    saveState();
+  });
+  document.getElementById("cashMonths").addEventListener("input", (e) => {
+    state.projectionMonths = Math.max(1, parseInt(e.target.value, 10) || 1);
+    renderKPIsAndMetrics();
+    saveState();
   });
 
   document.body.addEventListener("input", (e) => {
@@ -434,6 +482,7 @@ function resetSection(section) {
     ratios: "Florida DCF staff ratios",
     staff: "the salary list",
     expenses: "the G&A expense list",
+    cash: "starting cash and projection horizon",
   };
   if (!confirm(`Restore ${labels[section]} to the "${defaults.label}" defaults?`)) return;
   if (section === "revenue") {
@@ -445,6 +494,9 @@ function resetSection(section) {
     state.staff = clone(defaults.staff);
   } else if (section === "expenses") {
     state.expenses = clone(defaults.expenses);
+  } else if (section === "cash") {
+    state.startingCash = CASH_DEFAULTS.startingCash;
+    state.projectionMonths = CASH_DEFAULTS.projectionMonths;
   }
   render();
 }

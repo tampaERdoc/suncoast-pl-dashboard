@@ -26,6 +26,7 @@
   <div class="kpi card kpi-noi"><span class="label">Net Operating Income</span><span id="kpiNOI" class="value">$0</span><span id="kpiNOImonthly" class="sublabel">$0 / month</span></div>
   <div class="kpi card kpi-margin"><span class="label">Operating Margin</span><span id="kpiMargin" class="value">0%</span></div>
   <div class="kpi card kpi-children"><span class="label">Total Enrollment</span><span id="kpiChildren" class="value">0</span><span id="kpiPerChild" class="sublabel">$0 / child / mo</span></div>
+  <div class="kpi card kpi-cash"><span class="label">Cash on Hand <span id="kpiCashHorizon">(12 mo)</span></span><span id="kpiCash" class="value">$0</span><span id="kpiCashStart" class="sublabel">from $0 starting</span></div>
 </section>
 
 <main class="grid">
@@ -145,6 +146,51 @@
           <td></td>
         </tr>
       </tfoot>
+    </table>
+  </section>
+
+  <!-- CASH PROJECTION -->
+  <section class="card panel">
+    <div class="panel-head">
+      <h2>Cash on Hand Projection</h2>
+      <button class="reset-btn" data-reset="cash" title="Restore starting cash and horizon to defaults">↺ Reset section</button>
+    </div>
+    <p class="hint">Cash on Hand = Starting Cash + (Monthly NOI × months). Adjusts live with every P&amp;L change.</p>
+    <table class="data-table">
+      <tbody>
+        <tr>
+          <td>Starting Cash</td>
+          <td><input type="number" id="cashStart" min="0" step="100" value="20000" /></td>
+        </tr>
+        <tr>
+          <td>Project Forward (months)</td>
+          <td><input type="number" id="cashMonths" min="1" max="60" step="1" value="12" /></td>
+        </tr>
+        <tr>
+          <td>Monthly NOI</td>
+          <td id="cashNOI">$0</td>
+        </tr>
+        <tr class="hl">
+          <td>Projected Cash on Hand</td>
+          <td id="cashProjected">$0</td>
+        </tr>
+        <tr>
+          <td>Cash 3 mo</td><td id="cash3">$0</td>
+        </tr>
+        <tr>
+          <td>Cash 6 mo</td><td id="cash6">$0</td>
+        </tr>
+        <tr>
+          <td>Cash 12 mo</td><td id="cash12">$0</td>
+        </tr>
+        <tr>
+          <td>Cash 24 mo</td><td id="cash24">$0</td>
+        </tr>
+        <tr id="cashRunwayRow" style="display:none">
+          <td>Months until cash exhausted</td>
+          <td id="cashRunway">—</td>
+        </tr>
+      </tbody>
     </table>
   </section>
 
