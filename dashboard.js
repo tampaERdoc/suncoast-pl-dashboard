@@ -326,7 +326,6 @@ function renderKPIsAndMetrics() {
   const goalPct = cashGoal > 0 ? cashNow / cashGoal : 0;
   document.getElementById("kpiCashNow").textContent = fmtUSD(cashNow);
   document.getElementById("kpiCash1Yr").textContent = fmtUSD(cash1Yr);
-  document.getElementById("kpiCashGoal").textContent = fmtUSD(cashGoal);
   const noiSign = t.annualNOI >= 0 ? "+" : "−";
   document.getElementById("kpiCash1YrDelta").textContent = `${noiSign}${fmtUSD(Math.abs(t.annualNOI))} from NOI`;
   const progressEl = document.getElementById("kpiCashNowProgress");
