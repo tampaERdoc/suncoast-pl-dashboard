@@ -26,7 +26,8 @@
   <div class="kpi card kpi-noi"><span class="label">Net Operating Income</span><span id="kpiNOI" class="value">$0</span><span id="kpiNOImonthly" class="sublabel">$0 / month</span></div>
   <div class="kpi card kpi-margin"><span class="label">Operating Margin</span><span id="kpiMargin" class="value">0%</span></div>
   <div class="kpi card kpi-children"><span class="label">Total Enrollment</span><span id="kpiChildren" class="value">0</span><span id="kpiPerChild" class="sublabel">$0 / child / mo</span></div>
-  <div class="kpi card kpi-cash-now"><span class="label">Current Cash on Hand</span><span id="kpiCashNow" class="value">$0</span><span class="sublabel">starting balance</span></div>
+  <div class="kpi card kpi-cash-now"><span class="label">Current Cash on Hand</span><span id="kpiCashNow" class="value">$0</span><span id="kpiCashNowProgress" class="sublabel">0% of 90-day goal</span></div>
+  <div class="kpi card kpi-cash-goal"><span class="label">Goal Cash on Hand (90 days)</span><span id="kpiCashGoal" class="value">$0</span><span class="sublabel">3 mo operating expenses</span></div>
   <div class="kpi card kpi-cash-future"><span class="label">Est. Cash on Hand (1 Year)</span><span id="kpiCash1Yr" class="value">$0</span><span id="kpiCash1YrDelta" class="sublabel">+$0 from NOI</span></div>
 </section>
 
@@ -170,6 +171,10 @@
         <tr>
           <td>Monthly NOI</td>
           <td id="cashNOI">$0</td>
+        </tr>
+        <tr>
+          <td>Goal Cash on Hand <small>(90 days = 3 mo expenses)</small></td>
+          <td id="cashGoalRow">$0</td>
         </tr>
         <tr class="hl">
           <td>Projected Cash on Hand</td>

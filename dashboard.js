@@ -322,13 +322,26 @@ function renderKPIsAndMetrics() {
   // Cash on hand
   const cashNow = state.startingCash;
   const cash1Yr = state.startingCash + t.annualNOI;
+  const cashGoal = t.monthlyExp * 3;  // 90 days = 3 months of operating expenses
+  const goalPct = cashGoal > 0 ? cashNow / cashGoal : 0;
   document.getElementById("kpiCashNow").textContent = fmtUSD(cashNow);
   document.getElementById("kpiCash1Yr").textContent = fmtUSD(cash1Yr);
+  document.getElementById("kpiCashGoal").textContent = fmtUSD(cashGoal);
   const noiSign = t.annualNOI >= 0 ? "+" : "−";
   document.getElementById("kpiCash1YrDelta").textContent = `${noiSign}${fmtUSD(Math.abs(t.annualNOI))} from NOI`;
-  document.querySelector(".kpi-cash-now").classList.toggle("negative", cashNow < 0);
+  const progressEl = document.getElementById("kpiCashNowProgress");
+  const goalMet = cashNow >= cashGoal && cashGoal > 0;
+  progressEl.textContent = goalMet
+    ? `${fmtPct(goalPct)} of 90-day goal ✓`
+    : `${fmtPct(goalPct)} of 90-day goal — short ${fmtUSD(cashGoal - cashNow)}`;
+  progressEl.classList.toggle("met", goalMet);
+  progressEl.classList.toggle("short", !goalMet);
+  const nowCard = document.querySelector(".kpi-cash-now");
+  nowCard.classList.toggle("negative", cashNow < 0);
+  nowCard.classList.toggle("met", goalMet && cashNow >= 0);
   document.querySelector(".kpi-cash-future").classList.toggle("negative", cash1Yr < 0);
   document.getElementById("cashNOI").textContent = fmtUSD(t.monthlyNOI);
+  document.getElementById("cashGoalRow").textContent = fmtUSD(cashGoal);
   document.getElementById("cashProjected").textContent = fmtUSD(cashKpi);
   document.getElementById("cash3").textContent = fmtUSD(state.startingCash + t.monthlyNOI * 3);
   document.getElementById("cash6").textContent = fmtUSD(state.startingCash + t.monthlyNOI * 6);

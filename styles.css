@@ -114,6 +114,11 @@ body {
 .kpi-cash-future { border-left-color: #0ea5e9; }
 .kpi-cash-future.negative { border-left-color: var(--bad); }
 .kpi-cash-future.negative .value { color: var(--bad); }
+.kpi-cash-goal { border-left-color: #f59e0b; }
+.kpi-cash-now.met { border-left-color: var(--good); }
+.kpi-cash-now.met .value { color: #047857; }
+.kpi-cash-now .sublabel.met { color: #047857; font-weight: 600; }
+.kpi-cash-now .sublabel.short { color: #92400e; font-weight: 600; }
 
 .card {
   background: var(--card);
