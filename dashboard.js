@@ -325,17 +325,20 @@ function renderKPIsAndMetrics() {
   const cashNow = state.startingCash;
   const cashGoal = t.monthlyExp * 3;  // 90 days = 3 months of operating expenses
   const goalPct = cashGoal > 0 ? cashNow / cashGoal : 0;
+  const daysCovered = t.monthlyExp > 0 ? (cashNow / t.monthlyExp) * 30 : 0;
   document.getElementById("kpiCashNow").textContent = fmtUSD(cashNow);
   const progressEl = document.getElementById("kpiCashNowProgress");
   const goalMet = cashNow >= cashGoal && cashGoal > 0;
+  const daysLabel = `${Math.round(daysCovered)} days of expenses`;
   progressEl.textContent = goalMet
-    ? `${fmtPct(goalPct)} of 90-day goal ✓`
-    : `${fmtPct(goalPct)} of 90-day goal — short ${fmtUSD(cashGoal - cashNow)}`;
+    ? `${daysLabel} · ${fmtPct(goalPct)} of 90-day goal ✓`
+    : `${daysLabel} · short ${fmtUSD(cashGoal - cashNow)} of 90-day goal`;
   progressEl.classList.toggle("met", goalMet);
   progressEl.classList.toggle("short", !goalMet);
   const nowCard = document.querySelector(".kpi-cash-now");
   nowCard.classList.toggle("negative", cashNow < 0);
   nowCard.classList.toggle("met", goalMet && cashNow >= 0);
+  document.getElementById("cashDaysRow").textContent = `${daysCovered.toFixed(1)} days`;
   document.getElementById("cashNOI").textContent = fmtUSD(t.monthlyNOI);
   document.getElementById("cashGoalRow").textContent = fmtUSD(cashGoal);
   document.getElementById("cashProjected").textContent = fmtUSD(cashKpi);
