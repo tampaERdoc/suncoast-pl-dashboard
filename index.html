@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Suncoast Academy — Interactive P&L Dashboard</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <h1>Suncoast Academy</h1>
+    <p class="subtitle">Interactive Profit &amp; Loss Model</p>
+  </div>
+  <div class="scenarios">
+    <label>Scenario:</label>
+    <button data-scenario="baseline" class="scenario-btn active">July 2026 (66)</button>
+    <button data-scenario="expanded" class="scenario-btn">Expanded (81)</button>
+    <button id="resetBtn" class="scenario-btn ghost">Reset</button>
+  </div>
+</header>
+
+<section class="kpi-row">
+  <div class="kpi card kpi-revenue"><span class="label">Annual Revenue</span><span id="kpiRevenue" class="value">$0</span></div>
+  <div class="kpi card kpi-expense"><span class="label">Annual Expenses</span><span id="kpiExpense" class="value">$0</span></div>
+  <div class="kpi card kpi-noi"><span class="label">Net Operating Income</span><span id="kpiNOI" class="value">$0</span><span id="kpiNOImonthly" class="sublabel">$0 / month</span></div>
+  <div class="kpi card kpi-margin"><span class="label">Operating Margin</span><span id="kpiMargin" class="value">0%</span></div>
+  <div class="kpi card kpi-children"><span class="label">Total Enrollment</span><span id="kpiChildren" class="value">0</span><span id="kpiPerChild" class="sublabel">$0 / child / mo</span></div>
+</section>
+
+<main class="grid">
+
+  <!-- REVENUE -->
+  <section class="card panel">
+    <h2>Revenue — Tuition</h2>
+    <div class="control-row weeks-row">
+      <label>Weeks per month <small>(weekly→monthly multiplier)</small></label>
+      <input type="number" id="weeksPerMonth" min="1" max="5" step="0.1" value="4" />
+    </div>
+    <table class="data-table" id="revenueTable">
+      <thead>
+        <tr>
+          <th>Age Group</th>
+          <th>Enroll</th>
+          <th>Weekly $</th>
+          <th>Monthly Rev</th>
+          <th>Annual Rev</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+      <tfoot>
+        <tr class="totals">
+          <td>Total Tuition</td>
+          <td id="rev_total_enroll">0</td>
+          <td>—</td>
+          <td id="rev_total_monthly">$0</td>
+          <td id="rev_total_annual">$0</td>
+        </tr>
+      </tfoot>
+    </table>
+  </section>
+
+  <!-- STAFF RATIOS -->
+  <section class="card panel">
+    <h2>Florida DCF Staff Ratios <small>(65C-22.001)</small></h2>
+    <p class="hint">Edit each room's required ratio (children per teacher). The model computes <strong>required</strong> staff vs. <strong>assigned</strong> staff (count of payroll line-items tagged to that room). Out-of-ratio rooms turn red.</p>
+    <table class="data-table" id="ratioTable">
+      <thead>
+        <tr>
+          <th>Room</th>
+          <th>Enroll</th>
+          <th>Ratio (1:N)</th>
+          <th>Required FTE</th>
+          <th>Assigned FTE</th>
+          <th>Variance</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <!-- SALARIES -->
+  <section class="card panel">
+    <div class="panel-head">
+      <h2>Salaries &amp; Wages</h2>
+      <button id="addStaffBtn" class="add-btn">+ Add staff</button>
+    </div>
+    <table class="data-table editable" id="staffTable">
+      <thead>
+        <tr>
+          <th>Name / Role</th>
+          <th>Room</th>
+          <th>FTE</th>
+          <th>Monthly $</th>
+          <th>Annual $</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+      <tfoot>
+        <tr class="totals">
+          <td colspan="3">Total Salaries &amp; Wages</td>
+          <td id="staff_total_monthly">$0</td>
+          <td id="staff_total_annual">$0</td>
+          <td></td>
+        </tr>
+      </tfoot>
+    </table>
+  </section>
+
+  <!-- G&A -->
+  <section class="card panel">
+    <div class="panel-head">
+      <h2>General &amp; Administrative</h2>
+      <button id="addExpenseBtn" class="add-btn">+ Add expense</button>
+    </div>
+    <table class="data-table editable" id="expenseTable">
+      <thead>
+        <tr>
+          <th>Expense</th>
+          <th>Monthly $</th>
+          <th>Annual $</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+      <tfoot>
+        <tr class="totals">
+          <td>Total G&amp;A</td>
+          <td id="ga_total_monthly">$0</td>
+          <td id="ga_total_annual">$0</td>
+          <td></td>
+        </tr>
+      </tfoot>
+    </table>
+  </section>
+
+  <!-- VISUAL -->
+  <section class="card panel chart-panel">
+    <h2>Visual Breakdown</h2>
+    <div class="chart-container"><canvas id="breakdownChart"></canvas></div>
+  </section>
+
+  <!-- METRICS -->
+  <section class="card panel">
+    <h2>Key Performance Metrics</h2>
+    <table class="metrics-table">
+      <tbody>
+        <tr><td>Total Tuition Revenue (Annual)</td><td id="m_revenue">$0</td></tr>
+        <tr><td>Total Operating Expenses (Annual)</td><td id="m_expense">$0</td></tr>
+        <tr><td>Salaries % of Revenue</td><td id="m_salPct">0%</td></tr>
+        <tr><td>G&amp;A % of Revenue</td><td id="m_gaPct">0%</td></tr>
+        <tr><td>Total Expense Ratio</td><td id="m_expRatio">0%</td></tr>
+        <tr><td>Operating Margin</td><td id="m_margin">0%</td></tr>
+        <tr><td>Avg Monthly Revenue / Child</td><td id="m_perChild">$0</td></tr>
+        <tr class="hl"><td>Net Operating Income (Monthly)</td><td id="m_noiMonth">$0</td></tr>
+        <tr class="hl"><td>Net Operating Income (Annual)</td><td id="m_noiYear">$0</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+</main>
+
+<footer>
+  <p>Source: Suncoast Academy P&amp;L Statement. Florida DCF Rule 65C-22.001 ratios. All figures are estimates &mdash; not audited financials.</p>
+  <p class="hint">Changes are saved to your browser automatically. Use <em>Reset</em> to restore the selected scenario.</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="dashboard.js"></script>
+</body>
+</html>
